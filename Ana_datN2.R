@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("D:/trab/Covid19/")
+#setwd("D:/trab/Covid19/")
 library(vars)
 library(forecast)
 #
@@ -8,16 +8,16 @@ library(forecast)
 #  salvar los datos csv en Dat_CA
 #
 library(readr)
-serie_historica_acumulados <- read.csv("D:/trab/Covid19/serie_historica_acumulados.csv")
+serie_historica_acumulados <- read.csv("serie_historica_acumulados.csv")
 Dat_CA<-(serie_historica_acumulados[,1:7])
 #Dat_CA[Dat_CA$FECHA=='16/4/2020',]-Dat_CA[Dat_CA$FECHA=='15/4/2020',]
 #
-#  Tama駉 del fichero en DD
+#  Tama帽o del fichero en DD
 #
 DD<-dim(Dat_CA)
 
 #
-#  Elimina la 鷏tima fila que son comentarios, recalcula la dimensi髇 (revisar en cada fichero de entrada)
+#  Elimina la 煤ltima fila que son comentarios, recalcula la dimensi贸n (revisar en cada fichero de entrada)
 #
 AA<-DD[1]-0
 Dat_CA<-Dat_CA[1:AA,1:DD[2]]
@@ -28,21 +28,21 @@ DD<-dim(Dat_CA)
 Dat_CA[is.na(Dat_CA)] = 0
 Dat_CA$Fallecidos<-as.integer(Dat_CA$Fallecidos)
 #
-# Calcula el n鷐ero de d韆s que tiene el fichero y fija a 19 las comunidades aut髇omas
+# Calcula el n煤mero de d铆as que tiene el fichero y fija a 19 las comunidades aut贸nomas
 #
 NCA<-19
 ndias<-DD[1]/NCA
 #
-#  Fecha en los gr醘icos
+#  Fecha en los gr谩ficos
 #
 FechaF<-as.Date(Dat_CA$FECHA[DD[1]],format='%d/%m/%Y')
 FechaF<-format(FechaF,"%d %B")
 #
-# Genero el fichero de datos agrupados para Espa馻
+# Genero el fichero de datos agrupados para Espa帽a
 #
 Dat_ESP<-Dat_CA[1,2:DD[2]]
 #
-#  Recalculamos el primer d韆
+#  Recalculamos el primer d铆a
 #
 Dat_ESP[1,2]<-sum(Dat_CA$CASOS[1:NCA])
 Dat_ESP[1,3]<-sum(Dat_CA$Hospitalizados[1:NCA])
@@ -51,7 +51,7 @@ Dat_ESP[1,5]<-sum(Dat_CA$Fallecidos[1:NCA])
 Dat_ESP[1,6]<-sum(Dat_CA$Recuperados[1:NCA])
 Dat_ESP[is.na(Dat_ESP)] = 0
 #
-#  Calculamos el resto de d韆s
+#  Calculamos el resto de d铆as
 #
 for (I in 2:ndias){
 INI<-(I-1)*NCA+1
@@ -70,7 +70,7 @@ TSUCI<-ts(Dat_ESP$UCI)
 TSFallecidos<-ts(Dat_ESP$Fallecidos)
 TSRecuperados<-ts(Dat_ESP$Recuperados)
 #
-#  Selecciona los datos de Andaluc韆 (comunidad 1) Madrid (14)Catalu馻 (9)
+#  Selecciona los datos de Andaluc铆a (comunidad 1) Madrid (14)Catalu帽a (9)
 #
 NCAN<-1
 NCMD<-14
@@ -84,7 +84,7 @@ for (I in 2:ndias){
    Dat_CT<-rbind(Dat_CT,Dat_CA[(I-1)*NCA+NCCT,2:DD[2]])
 }
 #
-#  Diferencio la serie de logaritmos y almaceno el n鷐ero de casos en NCDL
+#  Diferencio la serie de logaritmos y almaceno el n煤mero de casos en NCDL
 #
 DLcasos<-diff(log(TSCasos), differences=1)
 NCDL<-length(DLcasos)
@@ -93,41 +93,41 @@ DLUCI<-diff(log(TSUCI), differences=1)
 DLFallecidos<-diff(log(TSFallecidos), differences=1)
 #
 #
-#  Gr醘icos de los datos observados y de las tasas log(Xt/Xt-1)
+#  Gr谩ficos de los datos observados y de las tasas log(Xt/Xt-1)
 #
 #
 
 png(filename = "./Graficos/TSCASOS.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(TSCasos,main="Casos contagiados en Espa馻", ylab="Casos", xlab="Observaci髇",cex.main=2) 
+plot(TSCasos,main="Casos contagiados en Espa帽a", ylab="Casos", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(50000,100000,150000,200000),col="blue")
 dev.off()
 
 png(filename = "./Graficos/TSHOSP.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(TSHospitalizados,main="Hospitalizados en Espa馻", ylab="Casos", xlab="Observaci髇",cex.main=2) 
+plot(TSHospitalizados,main="Hospitalizados en Espa帽a", ylab="Casos", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(20000,40000,60000),col="blue")
 dev.off()
 
 png(filename = "./Graficos/TSUCI.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(TSUCI,main="Personas en UCI en Espa馻", ylab="Casos", xlab="Observaci髇",cex.main=2) 
+plot(TSUCI,main="Personas en UCI en Espa帽a", ylab="Casos", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(2000,4000,6000),col="blue")
 dev.off()
 
 png(filename = "./Graficos/DLCASOS.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(DLcasos,main="ln(Casos_{t}/Casos_{t-1}) en Espa馻      (nivel 0.05 en rojo)", ylab="Tasa", xlab="Observaci髇",cex.main=2) 
+plot(DLcasos,main="ln(Casos_{t}/Casos_{t-1}) en Espa帽a      (nivel 0.05 en rojo)", ylab="Tasa", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(0.2,0.1),col="blue")
 abline(h=c(0.05),col="red")
 abline(h=c(0.0),col="green")
 dev.off()
 
 png(filename = "./Graficos/DLHOSP.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(DLHosp,main="ln(Hospitalizados_{t}/Hospitalizados_{t-1}) en Espa馻      (nivel 0.05 en rojo)", ylab="Tasa", xlab="Observaci髇",cex.main=2) 
+plot(DLHosp,main="ln(Hospitalizados_{t}/Hospitalizados_{t-1}) en Espa帽a      (nivel 0.05 en rojo)", ylab="Tasa", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(0.2,0.1),col="blue")
 abline(h=c(0.05),col="red")
 abline(h=c(0.0),col="green")
 dev.off()
 
 png(filename = "./Graficos/DLUCI.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(DLUCI,main="ln(UCI_{t}/UCI_{t-1}) en Espa馻      (nivel 0.05 en rojo)", ylim=c(-0.025,0.35), ylab="Tasa", xlab="Observaci髇",cex.main=2) 
+plot(DLUCI,main="ln(UCI_{t}/UCI_{t-1}) en Espa帽a      (nivel 0.05 en rojo)", ylim=c(-0.025,0.35), ylab="Tasa", xlab="Observaci贸n",cex.main=2) 
 abline(h=c(0.2,0.1),col="blue")
 abline(h=c(0.05),col="red")
 abline(h=c(0.0),col="green")
@@ -135,7 +135,7 @@ dev.off()
 
 
 #
-#  Predicci髇 modelos VAR
+#  Predicci贸n modelos VAR
 #
 NCO<-30
 #multiN<-Dat_ESP[,c("CASOS","Hospitalizados","UCI","Fallecidos")][NCO:ndias,]
@@ -149,28 +149,28 @@ EQ1<-VAR(multiN,p=3,type=c("const"),ic="AIC")
 #rHosp<-EQ1$varresult$Hospitalizados$residuals
 #rUCI<-EQ1$varresult$UCI$residuals
 #
-#  horizonte de predicci髇
+#  horizonte de predicci贸n
 #
 hpred<-7
 ppp<-forecast(EQ1,hpred)
 
 final<-ndias-NCO+1
-plot(ppp$forecast$CASOS,main="Predicci髇 de la tasa de casos en Espa馻")
+plot(ppp$forecast$CASOS,main="Predicci贸n de la tasa de casos en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 
 png(filename = "./Graficos/PTCASOS.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(ppp$forecast$CASOS,main="Predicci髇 de la tasa de casos en Espa馻")
+plot(ppp$forecast$CASOS,main="Predicci贸n de la tasa de casos en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 dev.off()
 
 #
-# Para deshacer la transformaci髇 Pred=Dato_{t-1}*Exp(Pred_t)
+# Para deshacer la transformaci贸n Pred=Dato_{t-1}*Exp(Pred_t)
 #
-# Primera predicci髇
+# Primera predicci贸n
 #
 ForeCasos<-exp(ppp$forecast$CASOS$mean[1])*Dat_ESP$CASOS[ndias]
 #
@@ -189,7 +189,7 @@ for (I in 1:hpred){
 }
 ppp<-forecast(EQ1,hpred)
 #
-# Primera predicci髇 l韒ites
+# Primera predicci贸n l铆mites
 #
 PCasos$lower[1,1]<-exp(ppp$forecast$CASOS$lower[1,1])*Dat_ESP$CASOS[ndias]
 PCasos$lower[1,2]<-exp(ppp$forecast$CASOS$lower[1,2])*Dat_ESP$CASOS[ndias]
@@ -206,18 +206,18 @@ PCasos$upper[I,2]<-exp(ppp$forecast$CASOS$upper[I,2])*PCasos$mean[I-1]
 }
 
 final<-length(TSCasos)
-plot(PCasos,main="Predicci髇 casos en Espa馻")
+plot(PCasos,main="Predicci贸n casos en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 
 png(filename = "./Graficos/PCASOS.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(PCasos,main="Predicci髇 casos en Espa馻")
+plot(PCasos,main="Predicci贸n casos en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 dev.off()
 
 #
-#  Para la predicci髇 de los Hospitalizados y UCI usamos los datos desde el 30
+#  Para la predicci贸n de los Hospitalizados y UCI usamos los datos desde el 30
 #
 NCO<-30
 multiN<-Dat_ESP[,c("CASOS","Hospitalizados","UCI")][NCO:ndias,]
@@ -228,24 +228,24 @@ EQ2<-VAR(multiN,p=3,type=c("none"),ic="AIC")
 ppp<-forecast(EQ2,hpred)
 
 final<-ndias-NCO+1
-plot(ppp$forecast$Hospitalizados,main="Predicci髇 de la tasa de Hospitalizados en Espa馻")
+plot(ppp$forecast$Hospitalizados,main="Predicci贸n de la tasa de Hospitalizados en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
-plot(ppp$forecast$UCI,main="Predicci髇 de la tasa de UCI en Espa馻")
+plot(ppp$forecast$UCI,main="Predicci贸n de la tasa de UCI en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 
 png(filename = "./Graficos/PTHOSP.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(ppp$forecast$Hospitalizados,main="Predicci髇 de la tasa de Hospitalizados en Espa馻")
+plot(ppp$forecast$Hospitalizados,main="Predicci贸n de la tasa de Hospitalizados en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 dev.off()
 
 png(filename = "./Graficos/PTUCI.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(ppp$forecast$UCI,main="Predicci髇 de la tasa de UCI en Espa馻")
+plot(ppp$forecast$UCI,main="Predicci贸n de la tasa de UCI en Espa帽a")
 abline(h=c(0.0),col="green")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
@@ -255,7 +255,7 @@ dev.off()
 
 # Incluye puntos points(c(22,23),c(0.02,-0.03),pch=20,cex=0.8,col=10)
 #
-# Primera predicci髇
+# Primera predicci贸n
 #
 ForeHospi<-exp(ppp$forecast$Hospitalizados$mean[1])*Dat_ESP$Hospitalizados[ndias]
 ForeUCI<-exp(ppp$forecast$UCI$mean[1])*Dat_ESP$UCI[ndias]
@@ -281,7 +281,7 @@ for (I in 1:hpred){
   PUCI$mean[I]<-ForeUCI[I]
 }
 #
-# Primera predicci髇 l韒ites
+# Primera predicci贸n l铆mites
 #
 ppp<-forecast(EQ2,hpred)
 PHospi$lower[1,1]<-exp(ppp$forecast$Hospitalizados$lower[1,1])*Dat_ESP$Hospitalizados[ndias]
@@ -308,22 +308,22 @@ PUCI$upper[I,2]<-exp(ppp$forecast$UCI$upper[I,2])*PUCI$mean[I-1]
 }
 
 final<-length(TSHospitalizados)
-plot(PHospi,main="Predicci髇 Hospitalizados en Espa馻")
+plot(PHospi,main="Predicci贸n Hospitalizados en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 
 png(filename = "./Graficos/PHOSP.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(PHospi,main="Predicci髇 Hospitalizados en Espa馻")
+plot(PHospi,main="Predicci贸n Hospitalizados en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 dev.off()
 
-plot(PUCI,main="Predicci髇 UCI en Espa馻")
+plot(PUCI,main="Predicci贸n UCI en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 
 png(filename = "./Graficos/PUCI.png",height = 550, width = 1200, units = "px",bg="white",antialias = "cleartype")
-plot(PUCI,main="Predicci髇 UCI en Espa馻")
+plot(PUCI,main="Predicci贸n UCI en Espa帽a")
 abline(v=final,lty=2,col="magenta")
 text(x=final, y=0, labels=FechaF,cex=1,col="magenta")
 dev.off()
@@ -348,7 +348,7 @@ library(xlsx)
 #write.xlsx(Predtot,"D:/trab/Covid19/Predicciones/FJAM_Pred.xlsx")
 
 #
-#   Para Andaluc韆
+#   Para Andaluc铆a
 #
 multiN<-Dat_AN[,c("CASOS","Hospitalizados","UCI")][26:ndias,]
 multiN<-diff(ts(log(multiN)))
@@ -359,12 +359,12 @@ EQ1<-VAR(multiN,p=3,type=c("none"),ic="AIC")
 #rHosp<-EQ1$varresult$Hospitalizados$residuals
 #rUCI<-EQ1$varresult$UCI$residuals
 #
-#  horizonte de predicci髇
+#  horizonte de predicci贸n
 #
 hpred<-7
 ppp<-forecast(EQ1,hpred)
 #
-# Primera predicci髇
+# Primera predicci贸n
 #
 ForeCasos<-exp(ppp$forecast$CASOS$mean[1])*Dat_AN$CASOS[ndias]
 #
@@ -391,12 +391,12 @@ multiN<-Dat_MD[,c("CASOS","Hospitalizados","UCI")][23:ndias,]
 multiN<-diff(ts(log(multiN)))
 EQ1<-VAR(multiN,p=3,type=c("none"),ic="AIC")
 #
-#  horizonte de predicci髇
+#  horizonte de predicci贸n
 #
 hpred<-7
 ppp<-forecast(EQ1,hpred)
 #
-# Primera predicci髇
+# Primera predicci贸n
 #
 ForeCasos<-exp(ppp$forecast$CASOS$mean[1])*Dat_MD$CASOS[ndias]
 #
